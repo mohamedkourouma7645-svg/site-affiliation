@@ -1,56 +1,36 @@
 // =====================================================
-//  TES PRODUITS — c'est le SEUL fichier à modifier.
-//  Pour chaque produit, remplace "lien" par TON lien affilié
-//  (Amazon Partenaires, Awin, Effiliation, etc.)
-//  Pour l'image : mets un fichier dans assets/img/ ou une adresse d'image.
+//  PRODUKTE — c'est le SEUL fichier à modifier.
+//  "suche" = ce qu'on cherche sur Amazon.de.
+//  Le lien affilié (avec ton identifiant) est créé automatiquement.
 // =====================================================
+const AMAZON_TAG = "wohnideenherb-21";
+
 const PRODUITS = [
-  {
-    nom: "Écouteurs sans fil",
-    categorie: "Tech",
-    description: "Bonne autonomie, réduction de bruit, idéal pour le quotidien.",
-    prix: "à partir de 49 €",
-    image: "assets/img/ecouteurs.svg",
-    lien: "https://www.amazon.fr/?tag=TON-ID-21"
-  },
-  {
-    nom: "Montre connectée",
-    categorie: "Tech",
-    description: "Suivi du sport, du sommeil et des notifications.",
-    prix: "à partir de 79 €",
-    image: "assets/img/montre.svg",
-    lien: "https://www.amazon.fr/?tag=TON-ID-21"
-  },
-  {
-    nom: "Lampe de bureau LED",
-    categorie: "Maison",
-    description: "Lumière réglable, parfaite pour travailler le soir.",
-    prix: "à partir de 25 €",
-    image: "assets/img/lampe.svg",
-    lien: "https://www.amazon.fr/?tag=TON-ID-21"
-  },
-  {
-    nom: "Gourde isotherme",
-    categorie: "Sport",
-    description: "Garde au froid 24h et au chaud 12h.",
-    prix: "à partir de 19 €",
-    image: "assets/img/gourde.svg",
-    lien: "https://www.amazon.fr/?tag=TON-ID-21"
-  },
-  {
-    nom: "Sac à dos ordinateur",
-    categorie: "Accessoires",
-    description: "Compartiment rembourré pour PC 15 pouces, port USB.",
-    prix: "à partir de 35 €",
-    image: "assets/img/sac.svg",
-    lien: "https://www.amazon.fr/?tag=TON-ID-21"
-  },
-  {
-    nom: "Tapis de yoga",
-    categorie: "Sport",
-    description: "Antidérapant et épais, pour le sport à la maison.",
-    prix: "à partir de 22 €",
-    image: "assets/img/yoga.svg",
-    lien: "https://www.amazon.fr/?tag=TON-ID-21"
-  }
+  { nom: "LED-Lichterkette", categorie: "Licht", image: "assets/img/lichterkette.svg",
+    description: "Warmes Licht für gemütliche Abende – am Fenster, Regal oder Bett.",
+    suche: "led lichterkette warmweiß innen" },
+  { nom: "Tischlampe mit Stoffschirm", categorie: "Licht", image: "assets/img/lampe.svg",
+    description: "Sanftes Licht für Nachttisch oder Sideboard.",
+    suche: "tischlampe stoffschirm" },
+  { nom: "Duftkerzen-Set", categorie: "Deko", image: "assets/img/kerzen.svg",
+    description: "Angenehmer Duft und Kerzenschein für jede Jahreszeit.",
+    suche: "duftkerzen set geschenk" },
+  { nom: "Kuscheldecke", categorie: "Wohnzimmer", image: "assets/img/decke.svg",
+    description: "Weiche Decke fürs Sofa – perfekt für Herbst und Winter.",
+    suche: "kuscheldecke flauschig sofa" },
+  { nom: "Kunstpflanze im Topf", categorie: "Deko", image: "assets/img/pflanze.svg",
+    description: "Grün ohne Gießen – sieht echt aus und bleibt schön.",
+    suche: "kunstpflanze im topf groß" },
+  { nom: "Schwebendes Wandregal", categorie: "Wohnzimmer", image: "assets/img/regal.svg",
+    description: "Platz für Bücher und Deko, ohne sichtbare Halterung.",
+    suche: "wandregal schwebend holz" },
+  { nom: "Bilderrahmen-Set", categorie: "Deko", image: "assets/img/bilder.svg",
+    description: "Für eine persönliche Bilderwand im Flur oder Wohnzimmer.",
+    suche: "bilderrahmen set collage" },
+  { nom: "Runder Wandspiegel", categorie: "Schlafzimmer", image: "assets/img/spiegel.svg",
+    description: "Lässt kleine Räume größer und heller wirken.",
+    suche: "wandspiegel rund gold" },
+  { nom: "Keramik-Vase", categorie: "Deko", image: "assets/img/vase.svg",
+    description: "Schlichte Vase für frische oder getrocknete Blumen.",
+    suche: "vase keramik modern" }
 ];
