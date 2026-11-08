@@ -44,7 +44,40 @@ function speckle(ctx: CanvasRenderingContext2D, r: () => number, n: number, colo
   ctx.globalAlpha = 1;
 }
 
+/** Melted cheese layer with transparent gaps (sauce shows through), browned bubbles. */
+function cheeseLayer(base: string, browned: string[], coverage: number, seed: string) {
+  return make(`cheese-${base}-${coverage}-${seed}`, 1024, (ctx, r) => {
+    const C = 512, R = 470;
+    ctx.clearRect(0, 0, 1024, 1024);
+    const n = Math.round(60 + coverage * 140);
+    for (let i = 0; i < n; i++) {
+      const a = r() * Math.PI * 2, d = Math.sqrt(r()) * (R - 40);
+      const x = C + Math.cos(a) * d, y = C + Math.sin(a) * d;
+      const rad = 35 + r() * 70 * coverage;
+      const g = ctx.createRadialGradient(x, y, rad * 0.2, x, y, rad);
+      g.addColorStop(0, base); g.addColorStop(0.75, base); g.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.ellipse(x, y, rad, rad * (0.7 + r() * 0.5), r() * Math.PI, 0, Math.PI * 2); ctx.fill();
+    }
+    // browned / blistered spots only where cheese is
+    ctx.globalCompositeOperation = "source-atop";
+    for (let i = 0; i < 160; i++) {
+      const x = r() * 1024, y = r() * 1024, rad = 4 + r() * 22;
+      const g = ctx.createRadialGradient(x, y, 0, x, y, rad);
+      g.addColorStop(0, browned[Math.floor(r() * browned.length)]!); g.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, rad, 0, Math.PI * 2); ctx.fill();
+    }
+    for (let i = 0; i < 400; i++) { // glossy bubbles
+      ctx.fillStyle = "rgba(255,255,255,0.35)";
+      ctx.beginPath(); ctx.arc(r() * 1024, r() * 1024, 1 + r() * 3, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalCompositeOperation = "source-over";
+  });
+}
+
 export const textures = {
+  mozzarella: (q: number) => cheeseLayer("rgb(252,244,222)", ["rgba(214,150,64,0.85)", "rgba(190,120,45,0.7)", "rgba(236,190,110,0.8)"], Math.min(1, 0.55 + q * 0.2), "m"),
+  cheddar: (q: number) => cheeseLayer("rgb(242,166,52)", ["rgba(200,110,30,0.8)", "rgba(170,90,25,0.6)"], Math.min(1, 0.4 + q * 0.2), "c"),
   crust: (whole: boolean) =>
     make(`crust-${whole}`, 512, (ctx, r) => {
       ctx.fillStyle = whole ? "#b98552" : "#e2b06e";

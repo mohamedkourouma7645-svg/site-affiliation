@@ -41,7 +41,7 @@ export function Burger3D({ layers }: { layers: DishLayer[] }) {
     <group rotation={[0, i * 0.7, 0]}>
       {[0, 2.1, 4.2].map((a) => (
         <group key={a} position={[Math.cos(a) * 0.45, 0.035, Math.sin(a) * 0.45]}>
-          <mesh geometry={G.disc(0.42, 0.06, 36)} castShadow><meshStandardMaterial color="#d1351f" roughness={0.35} /></mesh>
+          <mesh geometry={G.disc(0.42, 0.06, 36)} castShadow><meshPhysicalMaterial color="#d1351f" roughness={0.3} clearcoat={0.8} /></mesh>
           <mesh position={[0, 0.002, 0]} geometry={G.disc(0.3, 0.062, 36)}><meshStandardMaterial color="#ee6b4d" roughness={0.3} /></mesh>
         </group>
       ))}
@@ -49,7 +49,7 @@ export function Burger3D({ layers }: { layers: DishLayer[] }) {
   ));
 
   const patties: { k: string; n: number; h: number; mat: ReactNode }[] = [
-    { k: "rindfleisch-patty", n: q("rindfleisch-patty"), h: 0.26, mat: <meshStandardMaterial map={textures.patty()} roughness={0.9} /> },
+    { k: "rindfleisch-patty", n: q("rindfleisch-patty"), h: 0.26, mat: <meshPhysicalMaterial map={textures.patty()} roughness={0.75} bumpMap={textures.patty()} bumpScale={3} clearcoat={0.15} /> },
     { k: "crispy-chicken", n: q("crispy-chicken"), h: 0.28, mat: <meshStandardMaterial map={textures.crispy()} roughness={0.85} /> },
     { k: "veggie-patty", n: q("veggie-patty"), h: 0.24, mat: <meshStandardMaterial color="#7a6a3a" roughness={0.85} /> },
   ];
@@ -64,11 +64,11 @@ export function Burger3D({ layers }: { layers: DishLayer[] }) {
       const slices = placed === totalPatties ? cheese : Math.min(1, cheese);
       for (let s = 0; s < slices; s++) {
         cheese--;
-        add(`cheddar-${placed}-${s}`, 0.018, <mesh geometry={G.cheese()} rotation={[0, s * 0.5, 0]} castShadow><meshStandardMaterial color="#f2a531" roughness={0.4} side={2} /></mesh>);
+        add(`cheddar-${placed}-${s}`, 0.018, <mesh geometry={G.cheese()} rotation={[0, s * 0.5, 0]} castShadow><meshPhysicalMaterial color="#f2a531" roughness={0.35} clearcoat={0.4} side={2} /></mesh>);
       }
     }
   }
-  for (let s = 0; s < cheese; s++) add(`cheddar-x-${s}`, 0.018, <mesh geometry={G.cheese()} castShadow><meshStandardMaterial color="#f2a531" roughness={0.4} side={2} /></mesh>);
+  for (let s = 0; s < cheese; s++) add(`cheddar-x-${s}`, 0.018, <mesh geometry={G.cheese()} castShadow><meshPhysicalMaterial color="#f2a531" roughness={0.35} clearcoat={0.4} side={2} /></mesh>);
 
   for (let i = 0; i < q("bacon"); i++) add(`bacon-${i}`, 0.08, (
     <group rotation={[0, i * 1.2, 0]}>
@@ -103,7 +103,7 @@ export function Burger3D({ layers }: { layers: DishLayer[] }) {
   add("bun-top", 0.7, (
     <group>
       <mesh geometry={G.bunCut()} scale={0.97}><meshStandardMaterial color="#e2b47a" roughness={0.9} /></mesh>
-      <mesh geometry={G.bunTop()} castShadow><meshStandardMaterial map={textures.bunTop()} color={whole ? "#c49466" : "#ffffff"} roughness={0.55} /></mesh>
+      <mesh geometry={G.bunTop()} castShadow><meshPhysicalMaterial map={textures.bunTop()} color={whole ? "#c49466" : "#ffffff"} roughness={0.45} clearcoat={0.45} clearcoatRoughness={0.35} /></mesh>
       <Sesame />
     </group>
   ));

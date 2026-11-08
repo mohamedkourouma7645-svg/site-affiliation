@@ -84,6 +84,17 @@ export const G = {
   chunk: () => geo("chunk", () => displace(new THREE.DodecahedronGeometry(0.055, 1), (v) => { v.y *= 0.45; v.multiplyScalar(1 + noise(v.x * 20, v.y * 20, v.z * 20) * 0.15); })),
   box: (x: number, y: number, z: number) => geo(`box-${x}-${y}-${z}`, () => new THREE.BoxGeometry(x, y, z, 2, 1, 2)),
   corn: () => geo("corn", () => { const g = new THREE.SphereGeometry(0.022, 10, 8); g.scale(1, 0.7, 0.85); return g; }),
+  crustRim: (R: number) => geo(`crustRim-${R}`, () => {
+    const g = new THREE.TorusGeometry(R * 0.96, 0.065, 24, 160);
+    g.rotateX(Math.PI / 2);
+    return displace(g, (v) => {
+      const a = Math.atan2(v.z, v.x);
+      const puff = 1 + Math.sin(a * 7) * 0.05 + Math.sin(a * 17 + 1) * 0.04 + noise(v.x * 6, v.y * 6, v.z * 6) * 0.04;
+      const r = Math.hypot(v.x, v.z), c = R * 0.96;
+      const dx = (r - c) * puff, dy = v.y * puff * 1.1;
+      v.x = Math.cos(a) * (c + dx); v.z = Math.sin(a) * (c + dx); v.y = Math.max(dy, -0.04);
+    });
+  }),
   // burger
   bunBottom: () => geo("bunBottom", () => new THREE.LatheGeometry([0, 0.95, 1.04, 1.08, 1.06, 1.0, 0].map((x, i) => new THREE.Vector2(x, [0, 0, 0.05, 0.14, 0.24, 0.3, 0.31][i]!)), 64)),
   bunTop: () => geo("bunTop", () => { const g = new THREE.SphereGeometry(1.1, 64, 32, 0, Math.PI * 2, 0, Math.PI / 2); g.scale(1, 0.62, 1); return g; }),

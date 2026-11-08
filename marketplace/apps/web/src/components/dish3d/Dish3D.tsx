@@ -1,6 +1,6 @@
 "use client";
 
-import { ContactShadows, OrbitControls } from "@react-three/drei";
+import { ContactShadows, Environment, Lightformer, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useState } from "react";
 import { Burger3D, burgerHeight } from "./Burger3D";
@@ -17,9 +17,16 @@ export default function Dish3D({ kind, layers, scale }: { kind: "pizza" | "burge
 
   return (
     <Canvas shadows dpr={[1, 2]} camera={camera} gl={{ antialias: true, preserveDrawingBuffer: false }}>
-      <ambientLight intensity={0.55} />
-      <hemisphereLight args={["#fff8ef", "#b9a48f", 0.9]} />
-      <directionalLight position={[2.5, 5, 3]} intensity={2.2} castShadow shadow-mapSize={[1024, 1024]} shadow-bias={-0.0004} shadow-camera-left={-2} shadow-camera-right={2} shadow-camera-top={2} shadow-camera-bottom={-2} />
+      {/* Studio lighting baked locally from light panels (no HDRI download) for realistic reflections */}
+      <Environment resolution={256} frames={1} environmentIntensity={0.35}>
+        <Lightformer form="rect" intensity={2.5} position={[0, 5, 0]} rotation-x={Math.PI / 2} scale={[8, 8, 1]} />
+        <Lightformer form="rect" intensity={1.6} color="#ffd8b0" position={[-5, 2, 1]} rotation-y={Math.PI / 2} scale={[4, 3, 1]} />
+        <Lightformer form="rect" intensity={1.1} position={[5, 1.5, -1]} rotation-y={-Math.PI / 2} scale={[4, 3, 1]} />
+        <Lightformer form="ring" intensity={1.5} position={[0, 2, 6]} scale={3} />
+      </Environment>
+      <ambientLight intensity={0.2} />
+      <hemisphereLight args={["#fff8ef", "#b9a48f", 0.55]} />
+      <directionalLight position={[2.5, 5, 3]} intensity={2.0} castShadow shadow-mapSize={[1024, 1024]} shadow-bias={-0.0004} shadow-camera-left={-2} shadow-camera-right={2} shadow-camera-top={2} shadow-camera-bottom={-2} />
       <directionalLight position={[-3, 2, -2]} intensity={0.6} color="#ffd9b0" />
       {kind === "pizza" ? <Pizza3D layers={layers} scale={scale} /> : <Burger3D layers={layers} />}
       <ContactShadows position={[0, -0.06, 0]} opacity={0.45} scale={6} blur={2.6} far={3} />
