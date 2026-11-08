@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: t(DEFAULT_LOCALE, "app.tagline"),
 };
 
-export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#1F6F50" };
+export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#C2410C" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = DEFAULT_LOCALE;

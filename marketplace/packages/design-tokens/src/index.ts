@@ -1,7 +1,8 @@
 /**
  * Design tokens – single source for web (CSS variables) and mobile (React Native).
- * Identity: "basil & tomato" – fresh green as primary, warm tomato as accent,
- * cream surfaces that make food photography and 3D renders stand out.
+ * Identity: light & warm – white surfaces on a soft cream background, a warm
+ * "paprika" orange as primary and a fresh green for success states, so food
+ * photography and 3D renders stand out.
  */
 export const color = {
   basil900: "#0E3B2A",
@@ -23,19 +24,29 @@ export const color = {
   danger: "#B42318",
 } as const;
 
+export const brand = {
+  paprika700: "#C2410C", // primary – white text contrast 5.2:1
+  paprika800: "#9A3412",
+  paprika500: "#F97316", // decorative only (gradients, icons)
+  paprika100: "#FFEDD5",
+  peach50: "#FFF7F0",
+} as const;
+
 export const semantic = {
-  bg: color.cream50,
+  bg: brand.peach50,
   surface: color.white,
-  surfaceMuted: color.cream100,
-  border: color.sand200,
+  surfaceMuted: "#FFF1E6",
+  border: "#F1E4D8",
   text: color.ink900,
   textMuted: color.ink600,
-  primary: color.basil700,
-  primaryHover: color.basil900,
+  primary: brand.paprika700,
+  primaryHover: brand.paprika800,
+  primarySoft: brand.paprika100,
   onPrimary: color.white,
-  accent: color.tomato600,
+  accent: color.basil700,
   onAccent: color.white,
-  focus: color.basil500,
+  focus: brand.paprika500,
+  success: color.success,
   sponsored: color.warning,
 } as const;
 

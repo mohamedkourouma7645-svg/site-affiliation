@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { DEFAULT_LOCALE, ROOT_CATEGORIES, t } from "@app/core";
 import { restaurantSearchSchema, searchRestaurants } from "@/lib/catalog";
 
+export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Restaurants" };
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
@@ -32,7 +34,7 @@ export default async function RestaurantsPage({ searchParams }: Props) {
         <ul className="restaurant-list">
           {restaurants.map((r) => (
             <li key={r.slug} className="restaurant">
-              <h3>{r.name}</h3>
+              <h3><Link href={`/restaurant/${r.slug}`}>{r.name}</Link></h3>
               <p className="meta">
                 {r.city} · ca. {r.prepTimeMinutes} Min.
                 {r.ratingCount > 0 && ` · ★ ${r.ratingAvg.toFixed(1)} (${r.ratingCount})`}

@@ -22,8 +22,8 @@ test("search navigates to an honest result page", async ({ page }) => {
   await page.getByRole("button", { name: "Restaurants finden" }).click();
   await expect(page).toHaveURL(/\/restaurants\?modus=lieferung&adresse=/);
   await expect(page.getByText("Suche Restaurants für: Alexanderplatz 1, 10178 Berlin")).toBeVisible();
-  // Without configured partners the page must say so – never show fake restaurants.
-  await expect(page.getByText("noch keine Partnerrestaurants")).toBeVisible();
+  // Only the clearly labelled demo restaurant exists in the test catalogue.
+  await expect(page.getByRole("link", { name: "Test-Pizzeria (Demo)" })).toBeVisible();
 });
 
 test("pickup mode works without an address", async ({ page }) => {
