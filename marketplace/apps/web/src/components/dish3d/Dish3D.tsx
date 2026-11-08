@@ -2,7 +2,7 @@
 
 import { ContactShadows, Environment, Lightformer, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Burger3D, burgerHeight } from "./Burger3D";
 import { Pizza3D } from "./Pizza3D";
 
@@ -11,12 +11,27 @@ export interface DishLayer { key: string; quantity: number }
 /** Real-time 3D view (React Three Fiber). Loaded lazily; the 2D fallback is used without WebGL. */
 export default function Dish3D({ kind, layers, scale }: { kind: "pizza" | "burger"; layers: DishLayer[]; scale: number }) {
   const [interacted, setInteracted] = useState(false);
+  // Render continuously only while something moves (drop-in animation, short intro
+  // rotation, user dragging); otherwise render on demand to save battery/CPU.
+  const [animating, setAnimating] = useState(true);
+  const [intro, setIntro] = useState(true);
+  const signature = layers.map((l) => `${l.key}:${l.quantity}`).join("|") + scale;
+  useEffect(() => {
+    setAnimating(true);
+    const t = setTimeout(() => setAnimating(false), 1500);
+    return () => clearTimeout(t);
+  }, [signature]);
+  useEffect(() => {
+    const t = setTimeout(() => setIntro(false), 6000);
+    return () => clearTimeout(t);
+  }, []);
+  const spinning = intro && !interacted;
   const h = kind === "burger" ? burgerHeight(layers) : 0.1;
   const target: [number, number, number] = [0, kind === "burger" ? h * 0.45 : 0, 0];
   const camera = kind === "burger" ? { position: [0, h * 0.6 + 1.2, h * 1.6 + 2.6] as [number, number, number], fov: 36 } : { position: [0, 2.3, 2.0] as [number, number, number], fov: 40 };
 
   return (
-    <Canvas shadows dpr={[1, 2]} camera={camera} gl={{ antialias: true, preserveDrawingBuffer: false }}>
+    <Canvas frameloop={animating || spinning ? "always" : "demand"} shadows dpr={[1, 1.75]} camera={camera} gl={{ antialias: true, preserveDrawingBuffer: false }}>
       {/* Studio lighting baked locally from light panels (no HDRI download) for realistic reflections */}
       <Environment resolution={256} frames={1} environmentIntensity={0.35}>
         <Lightformer form="rect" intensity={2.5} position={[0, 5, 0]} rotation-x={Math.PI / 2} scale={[8, 8, 1]} />
@@ -36,7 +51,7 @@ export default function Dish3D({ kind, layers, scale }: { kind: "pizza" | "burge
         minDistance={kind === "burger" ? 2.4 : 1.6}
         maxDistance={6}
         maxPolarAngle={Math.PI * 0.47}
-        autoRotate={!interacted}
+        autoRotate={spinning}
         autoRotateSpeed={0.8}
         onStart={() => setInteracted(true)}
       />
