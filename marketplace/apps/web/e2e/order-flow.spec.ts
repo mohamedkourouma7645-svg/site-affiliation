@@ -1,6 +1,13 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 
+// Release WebGL contexts before Playwright tears down the browser context: with
+// software rendering (SwiftShader on CI) closing a context with a live canvas can stall
+// the next test's context setup.
+test.afterEach(async ({ page }) => {
+  await page.goto("about:blank").catch(() => {});
+});
+
 const unitPrice = (page: Page) => page.getByTestId("unit-price");
 const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const plus = (page: Page, name: string) => page.getByRole("button", { name: new RegExp(`^${esc(name)}\\s.*hinzufügen$`) });
