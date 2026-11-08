@@ -7,6 +7,7 @@ import {
 } from "@app/core";
 import { addToCart, type CartRestaurant } from "@/lib/cart";
 import { PizzaPreview } from "./PizzaPreview";
+import { DishViewer } from "./dish3d/DishViewer";
 
 interface Props {
   product: ConfigurableProduct;
@@ -101,10 +102,15 @@ export function Configurator({ product, description, productAllergens, restauran
   return (
     <div className="configurator">
       <div className="config-visual">
-        {product.kind === "pizza" ? (
+        {product.kind === "pizza" || product.kind === "burger" ? (
           <>
-            <PizzaPreview layers={layers} scale={variant?.scale ?? 1} />
-            <p className="meta center">2D-Vorschau · 3D-Ansicht folgt in Phase 5</p>
+            <DishViewer
+              kind={product.kind}
+              layers={layers}
+              scale={variant?.scale ?? 1}
+              fallback={product.kind === "pizza" ? <PizzaPreview layers={layers} scale={variant?.scale ?? 1} /> : <ol className="stack-fallback" aria-label="Aufbau deines Burgers">{[...layers].reverse().map((l) => <li key={l.key}>{l.quantity > 1 ? `${l.quantity}× ` : ""}{product.options.find((o) => o.modelKey === l.key)?.name}</li>)}</ol>}
+            />
+            <p className="meta center">Live-Vorschau · Ziehen zum Drehen, Zoomen mit zwei Fingern</p>
           </>
         ) : null}
       </div>

@@ -114,3 +114,22 @@ div.option { grid-template-columns: 1fr auto auto; }
 .cart { display: grid; gap: 14px; max-width: 720px; }
 .cart-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .cart-line { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius-md); padding: 12px 14px; }
+
+/* ---- light design refresh + 3D ---- */
+body { background: radial-gradient(1200px 500px at 50% -120px, #ffe8d6 0%, var(--c-bg) 60%) no-repeat, var(--c-bg); }
+.header { background: rgba(255,255,255,.85); }
+.logo-mark { background: linear-gradient(135deg, #f97316, var(--c-primary)); border-radius: 12px; }
+.search-card, .group, .price-box, .menu-item, .cart-line, .restaurant, .category { border-color: transparent; box-shadow: 0 1px 2px rgba(120,60,20,.06), 0 6px 20px rgba(120,60,20,.07); }
+.category-icon { width: 56px; height: 56px; border-radius: 50%; background: var(--c-surface-muted); display: grid; place-items: center; }
+.badge-3d { color: var(--c-primary); background: var(--c-primary-soft); }
+.feature { background: linear-gradient(135deg, #f97316 0%, var(--c-primary) 55%, var(--c-primary-hover) 100%); border-radius: var(--radius-lg); }
+.btn-primary { border-radius: var(--radius-pill); box-shadow: 0 6px 16px rgba(194,65,12,.28); }
+.btn-ghost { border-radius: var(--radius-pill); }
+.segmented label:has(input:checked) { box-shadow: 0 4px 12px rgba(194,65,12,.25); }
+.test-banner { background: #FFF3C4; }
+.success { color: var(--c-success); }
+.dish-3d, .dish-loading { width: 100%; aspect-ratio: 1 / 1; max-width: 520px; margin: 0 auto; border-radius: var(--radius-lg); background: radial-gradient(closest-side, #ffffff 0%, #fff1e6 70%, #ffe6d3 100%); overflow: hidden; touch-action: none; }
+.dish-3d canvas { cursor: grab; }
+.dish-loading { animation: pulse 1.2s ease-in-out infinite alternate; }
+@keyframes pulse { from { opacity: .6; } to { opacity: 1; } }
+.stack-fallback { list-style: none; padding: 16px; margin: 0 auto; max-width: 320px; display: grid; gap: 6px; text-align: center; background: var(--c-surface); border-radius: var(--radius-lg); }

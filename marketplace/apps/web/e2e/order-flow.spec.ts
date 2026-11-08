@@ -26,8 +26,27 @@ test("configure a pizza with live prices and size-dependent extras", async ({ pa
   await page.getByText("32 cm").click();
   // 11,50 + 2,50 + 1,50 + 1,00 + 3,00 + 0,80 (salami/chicken cost more on 32 cm)
   await expect(unitPrice(page)).toHaveText("20,30 €");
-  // The preview reflects the toppings.
+  // Live 3D view is rendered.
+  await expect(page.getByTestId("dish-3d").locator("canvas")).toBeVisible();
+});
+
+test("2D fallback view works without 3D", async ({ page }) => {
+  await page.goto("/restaurant/test-pizzeria");
+  const href = await page.getByRole("link", { name: /Eigene Pizza/ }).getAttribute("href");
+  await page.goto(`${href}?ansicht=2d`);
   await expect(page.getByRole("img", { name: "Vorschau deiner Pizza" })).toBeVisible();
+});
+
+test("burger configurator stacks layers and prices patties", async ({ page }) => {
+  await page.goto("/restaurant/test-pizzeria");
+  await page.getByRole("link", { name: /^CheeseburgerAnpassbar/ }).click();
+  await expect(unitPrice(page)).toHaveText("6,90 €");
+  await plus(page, "Rindfleisch-Patty").click();
+  await plus(page, "Bacon").click();
+  await expect(unitPrice(page)).toHaveText("10,60 €");
+  await expect(page.getByTestId("dish-3d").locator("canvas")).toBeVisible();
+  // only one meat type at a time
+  await expect(plus(page, "Crispy Chicken")).toBeDisabled();
 });
 
 test("compatibility rules and limits are enforced", async ({ page }) => {

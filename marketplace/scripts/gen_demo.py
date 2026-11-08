@@ -16,16 +16,17 @@ out.append("""-- ===============================================================
 begin;
 """)
 out.append(f"""insert into public.restaurants (id, slug, name, description, cuisines, status, verified_at, street, house_number, postal_code, city, country_code, latitude, longitude, prep_time_minutes, offers_delivery, offers_pickup, accepting_orders)
-values ({q(R)}, 'test-pizzeria', 'Test-Pizzeria (Demo)', {j({'de':'Testbetrieb – keine echten Bestellungen. Zum Ausprobieren des Konfigurators.'})}, '{{pizza,italienisch}}', 'active', now(), 'Teststraße', '1', '10115', 'Berlin', 'DE', 52.532, 13.384, 20, true, true, true)
+values ({q(R)}, 'test-pizzeria', 'Test-Pizzeria (Demo)', {j({'de':'Testbetrieb – keine echten Bestellungen. Zum Ausprobieren des Konfigurators.'})}, '{{pizza,burger,italienisch}}', 'active', now(), 'Teststraße', '1', '10115', 'Berlin', 'DE', 52.532, 13.384, 20, true, true, true)
 on conflict (id) do nothing;
 """)
 out.append(f"""insert into public.delivery_zones (id, restaurant_id, name, radius_m, delivery_fee_cents, min_order_cents, eta_minutes)
 values ({q(U('zone'))}, {q(R)}, 'Testzone 5 km', 5000, 249, 1000, 35) on conflict (id) do nothing;
 """)
-cat_pizza = U('cat-pizza'); cat_drinks = U('cat-drinks')
+cat_pizza = U('cat-pizza'); cat_drinks = U('cat-drinks'); cat_burger = U('cat-burger')
 out.append(f"""insert into public.categories (id, slug, restaurant_id, name, sort_order) values
   ({q(cat_pizza)}, 'pizza', {q(R)}, {j({'de':'Pizza'})}, 1),
-  ({q(cat_drinks)}, 'getraenke', {q(R)}, {j({'de':'Getränke'})}, 2)
+  ({q(cat_burger)}, 'burger', {q(R)}, {j({'de':'Burger'})}, 2),
+  ({q(cat_drinks)}, 'getraenke', {q(R)}, {j({'de':'Getränke'})}, 3)
 on conflict (id) do nothing;
 """)
 ING = {
@@ -52,6 +53,22 @@ ING = {
  'ananas': ('Ananas', []),
  'chili': ('Chili', []),
  'rucola': ('Rucola', []),
+ # burger
+ 'b-brioche': ('Brioche-Brötchen', ['gluten','eggs','milk','sesame']),
+ 'b-vollkorn': ('Vollkorn-Brötchen', ['gluten','sesame']),
+ 'b-rind': ('Rindfleisch-Patty', []),
+ 'b-chicken': ('Crispy Chicken', ['gluten']),
+ 'b-veggie': ('Veggie-Patty', ['soy','celery']),
+ 'b-cheddar': ('Cheddar-Scheibe', ['milk']),
+ 'b-bacon': ('Bacon', []),
+ 'b-salat': ('Eisbergsalat', []),
+ 'b-tomate': ('Tomatenscheiben', []),
+ 'b-zwiebel': ('Rote Zwiebeln', []),
+ 'b-gurke': ('Gewürzgurken', ['mustard']),
+ 'b-ei': ('Spiegelei', ['eggs']),
+ 'b-ketchup': ('Ketchup', []),
+ 'b-mayo': ('Mayonnaise', ['eggs','mustard']),
+ 'b-burgersosse': ('Burger-Soße', ['eggs','mustard']),
 }
 vals = [f"({q(U('ing-'+k))}, {q(R)}, {j({'de':n})}, {arr(a)})" for k,(n,a) in ING.items()]
 out.append("insert into public.ingredients (id, restaurant_id, name, allergens) values\n  " + ",\n  ".join(vals) + "\non conflict (id) do nothing;\n")
@@ -99,6 +116,36 @@ on conflict (id) do nothing;
 pizza('p-eigene', 'Eigene Pizza', 'Stell dir deine Pizza selbst zusammen.', 1, {})
 pizza('p-margherita', 'Pizza Margherita', 'Tomatensoße, Mozzarella.', 2, {})
 pizza('p-salami', 'Pizza Salami', 'Tomatensoße, Mozzarella, Salami.', 3, {'salami':1})
+
+def burger(pkey, name, desc, sort, base, defaults):
+    P = U(pkey)
+    out.append(f"""insert into public.products (id, restaurant_id, category_id, name, description, configurator_kind, is_configurable, vat_rate_bp, allergens, sort_order)
+values ({q(P)}, {q(R)}, {q(cat_burger)}, {j({'de':name})}, {j({'de':desc})}, 'burger', true, 700, '{{}}', {sort}) on conflict (id) do nothing;
+insert into public.product_variants (id, product_id, restaurant_id, name, price_cents, scale, sort_order) values
+  ({q(U(pkey+'-v'))}, {q(P)}, {q(R)}, {j({'de':'Normal'})}, {base}, 1, 1)
+on conflict (id) do nothing;
+""")
+    groups = [
+      ('brot', 'Brötchen', 'single', 1, 1, 1, {'type':'stack','order':0,'thickness':0}, [('b-brioche',0,1,False,1),('b-vollkorn',50,0,True,1)]),
+      ('fleisch', 'Fleisch / Patty', 'multiple', 1, 1, 3, {'type':'stack','order':1,'thickness':0}, [('b-rind',250,1,True,3),('b-chicken',250,0,True,3),('b-veggie',200,0,True,3)]),
+      ('kaese', 'Käse', 'multiple', 0, 1, 3, {'type':'stack','order':2,'thickness':0}, [('b-cheddar',80,1,True,3)]),
+      ('belag', 'Belag', 'multiple', 0, 6, 8, {'type':'stack','order':3,'thickness':0}, [('b-bacon',120,0,True,2),('b-salat',50,1,True,2),('b-tomate',50,1,True,2),('b-zwiebel',50,0,True,2),('b-gurke',50,1,True,2),('b-ei',100,0,True,1)]),
+      ('sosse', 'Soßen', 'multiple', 0, 3, 3, {'type':'stack','order':4,'thickness':0}, [('b-burgersosse',30,1,True,1),('b-ketchup',30,0,True,1),('b-mayo',30,0,True,1)]),
+    ]
+    for gi,(gk,gname,sel,mn,mx,tot,place,opts) in enumerate(groups):
+        G = U(pkey+'-g-'+gk)
+        out.append(f"""insert into public.ingredient_groups (id, product_id, restaurant_id, name, selection, min_select, max_select, max_total_quantity, placement, sort_order)
+values ({q(G)}, {q(P)}, {q(R)}, {j({'de':gname})}, '{sel}', {mn}, {mx}, {tot}, {j(place)}, {gi}) on conflict (id) do nothing;
+""")
+        rows=[]
+        for oi,(ik,price,dq,rem,mxq) in enumerate(opts):
+            dq = defaults.get(ik, dq)
+            rows.append(f"({q(U(pkey+'-o-'+ik))}, {q(P)}, {q(G)}, {q(U('ing-'+ik))}, {q(R)}, {price}, {dq}, {max(mxq,dq)}, {'true' if rem else 'false'}, {oi})")
+        out.append("insert into public.product_ingredients (id, product_id, group_id, ingredient_id, restaurant_id, unit_price_cents, default_quantity, max_quantity, removable, sort_order) values\n  " + ",\n  ".join(rows) + "\non conflict (id) do nothing;\n")
+
+burger('b-eigener', 'Eigener Burger', 'Bau dir deinen Burger Schicht für Schicht.', 4, 790, {})
+burger('b-cheese', 'Cheeseburger', 'Rindfleisch, Cheddar, Salat, Tomate, Gurken, Burger-Soße.', 5, 690, {})
+burger('b-bacon', 'Bacon Burger', 'Wie der Cheeseburger, plus Bacon und rote Zwiebeln.', 6, 890, {'b-bacon':1,'b-zwiebel':1})
 
 W = U('p-wasser')
 out.append(f"""insert into public.products (id, restaurant_id, category_id, name, description, is_configurable, vat_rate_bp, sort_order)

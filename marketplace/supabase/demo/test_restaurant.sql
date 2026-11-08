@@ -6,13 +6,14 @@
 -- =====================================================================
 begin;
 insert into public.restaurants (id, slug, name, description, cuisines, status, verified_at, street, house_number, postal_code, city, country_code, latitude, longitude, prep_time_minutes, offers_delivery, offers_pickup, accepting_orders)
-values ('b1122e7c-f209-5dfe-8e5a-81f05c461fff', 'test-pizzeria', 'Test-Pizzeria (Demo)', '{"de": "Testbetrieb – keine echten Bestellungen. Zum Ausprobieren des Konfigurators."}', '{pizza,italienisch}', 'active', now(), 'Teststraße', '1', '10115', 'Berlin', 'DE', 52.532, 13.384, 20, true, true, true)
+values ('b1122e7c-f209-5dfe-8e5a-81f05c461fff', 'test-pizzeria', 'Test-Pizzeria (Demo)', '{"de": "Testbetrieb – keine echten Bestellungen. Zum Ausprobieren des Konfigurators."}', '{pizza,burger,italienisch}', 'active', now(), 'Teststraße', '1', '10115', 'Berlin', 'DE', 52.532, 13.384, 20, true, true, true)
 on conflict (id) do nothing;
 insert into public.delivery_zones (id, restaurant_id, name, radius_m, delivery_fee_cents, min_order_cents, eta_minutes)
 values ('03aaf5be-b087-5bb4-9bf1-b32136591d09', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 'Testzone 5 km', 5000, 249, 1000, 35) on conflict (id) do nothing;
 insert into public.categories (id, slug, restaurant_id, name, sort_order) values
   ('4ec62b63-de33-590c-90f2-02ebbe5fb042', 'pizza', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Pizza"}', 1),
-  ('b6436508-a326-54a6-b5d1-229f05e0450b', 'getraenke', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Getränke"}', 2)
+  ('19a5836c-c5e4-579f-9673-294c465c0dd6', 'burger', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Burger"}', 2),
+  ('b6436508-a326-54a6-b5d1-229f05e0450b', 'getraenke', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Getränke"}', 3)
 on conflict (id) do nothing;
 insert into public.ingredients (id, restaurant_id, name, allergens) values
   ('2d86512a-014d-51b4-bec3-a1ed07c8c5be', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Klassischer Teig"}', '{gluten}'),
@@ -36,7 +37,22 @@ insert into public.ingredients (id, restaurant_id, name, allergens) values
   ('411b1a9d-c641-5e99-a174-1bd44a632717', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Mais"}', '{}'),
   ('b7b48b01-eaa4-58d0-9fb1-5181c8cc4174', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Ananas"}', '{}'),
   ('c4e5d153-5d7d-5f88-9d51-7076ea7199d9', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Chili"}', '{}'),
-  ('6d8ea7b0-f36d-53a9-9193-9f6fb04ae5e0', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Rucola"}', '{}')
+  ('6d8ea7b0-f36d-53a9-9193-9f6fb04ae5e0', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Rucola"}', '{}'),
+  ('c64ea5d0-47f1-5a19-9121-f4cc7745fc57', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Brioche-Brötchen"}', '{gluten,eggs,milk,sesame}'),
+  ('859df985-8d37-5d6b-8da3-bbaf9df8f07e', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Vollkorn-Brötchen"}', '{gluten,sesame}'),
+  ('096e3846-196b-54bd-bf00-a0d90e00cd9c', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Rindfleisch-Patty"}', '{}'),
+  ('8bbc25a2-db78-5693-a1b2-69916a61a6ef', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Crispy Chicken"}', '{gluten}'),
+  ('e9157874-3714-5bcc-9cc6-356f3e36d4aa', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Veggie-Patty"}', '{soy,celery}'),
+  ('bad76396-b08e-59dd-ab32-4adff31ce40f', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Cheddar-Scheibe"}', '{milk}'),
+  ('c6ff1548-3ece-5539-bb7b-43e31fe1074b', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Bacon"}', '{}'),
+  ('ed0f7015-6006-5e96-93de-3cacd1d5a1f6', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Eisbergsalat"}', '{}'),
+  ('eb2039f7-5394-5ce9-8ad4-5a816840d82e', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Tomatenscheiben"}', '{}'),
+  ('5592210e-a2af-5849-86aa-b3d4e984b9d5', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Rote Zwiebeln"}', '{}'),
+  ('f51933ef-7fec-5569-a6cc-864d4fa8ffa0', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Gewürzgurken"}', '{mustard}'),
+  ('3698764b-8a9a-5cc4-a268-5d7dad450ac4', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Spiegelei"}', '{eggs}'),
+  ('8f1149bd-2331-5bd0-82fc-b3d61b5fc84b', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Ketchup"}', '{}'),
+  ('119b1169-cb8c-5cdc-9184-2e905044457b', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Mayonnaise"}', '{eggs,mustard}'),
+  ('50cb1c81-4afe-5a3b-943f-1b494b720745', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Burger-Soße"}', '{eggs,mustard}')
 on conflict (id) do nothing;
 insert into public.products (id, restaurant_id, category_id, name, description, configurator_kind, is_configurable, vat_rate_bp, allergens, sort_order)
 values ('22a95c5d-efbc-50d1-aa6c-878ab564c6b6', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '4ec62b63-de33-590c-90f2-02ebbe5fb042', '{"de": "Eigene Pizza"}', '{"de": "Stell dir deine Pizza selbst zusammen."}', 'pizza', true, 700, '{gluten,milk}', 1) on conflict (id) do nothing;
@@ -202,6 +218,126 @@ insert into public.product_ingredient_prices (product_ingredient_id, variant_id,
 on conflict do nothing;
 insert into public.configurator_rules (id, product_id, restaurant_id, rule_type, option_id, target_option_id) values
   ('4cb3404c-0038-5f32-9e1f-8eb9710a67b7', '06e1ed1b-4aa9-5340-8504-9b2c0b7a9e60', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 'excludes', '7109ca05-9675-54a9-9bc1-f9aac35fc9ba', '1ab7082f-c695-5746-8cfe-c78fd3073d08')
+on conflict (id) do nothing;
+insert into public.products (id, restaurant_id, category_id, name, description, configurator_kind, is_configurable, vat_rate_bp, allergens, sort_order)
+values ('9f06c800-96d2-5b13-944a-5fd8b2457fd7', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '19a5836c-c5e4-579f-9673-294c465c0dd6', '{"de": "Eigener Burger"}', '{"de": "Bau dir deinen Burger Schicht für Schicht."}', 'burger', true, 700, '{}', 4) on conflict (id) do nothing;
+insert into public.product_variants (id, product_id, restaurant_id, name, price_cents, scale, sort_order) values
+  ('8ef7c612-c7d8-5de4-9549-fb3a98fb1418', '9f06c800-96d2-5b13-944a-5fd8b2457fd7', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Normal"}', 790, 1, 1)
+on conflict (id) do nothing;
+insert into public.ingredient_groups (id, product_id, restaurant_id, name, selection, min_select, max_select, max_total_quantity, placement, sort_order)
+values ('528c7de6-a2fa-534e-b581-76bf6d3d970f', '9f06c800-96d2-5b13-944a-5fd8b2457fd7', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Brötchen"}', 'single', 1, 1, 1, '{"type": "stack", "order": 0, "thickness": 0}', 0) on conflict (id) do nothing;
+insert into public.product_ingredients (id, product_id, group_id, ingredient_id, restaurant_id, unit_price_cents, default_quantity, max_quantity, removable, sort_order) values
+  ('3b4d411e-8574-57cd-adc1-06ebc9bbb312', '9f06c800-96d2-5b13-944a-5fd8b2457fd7', '528c7de6-a2fa-534e-b581-76bf6d3d970f', 'c64ea5d0-47f1-5a19-9121-f4cc7745fc57', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 0, 1, 1, false, 0),
+  ('c93b132f-cc29-5fc4-8e96-2286f516fc92', '9f06c800-96d2-5b13-944a-5fd8b2457fd7', '528c7de6-a2fa-534e-b581-76bf6d3d970f', '859df985-8d37-5d6b-8da3-bbaf9df8f07e', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 50, 0, 1, true, 1)
+on conflict (id) do nothing;
+insert into public.ingredient_groups (id, product_id, restaurant_id, name, selection, min_select, max_select, max_total_quantity, placement, sort_order)
+values ('0371efb9-6d34-5d6a-b71d-71773256757a', '9f06c800-96d2-5b13-944a-5fd8b2457fd7', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Fleisch / Patty"}', 'multiple', 1, 1, 3, '{"type": "stack", "order": 1, "thickness": 0}', 1) on conflict (id) do nothing;
+insert into public.product_ingredients (id, product_id, group_id, ingredient_id, restaurant_id, unit_price_cents, default_quantity, max_quantity, removable, sort_order) values
+  ('5ed8155a-0ce5-5159-bf63-ceb8f664a7ee', '9f06c800-96d2-5b13-944a-5fd8b2457fd7', '0371efb9-6d34-5d6a-b71d-71773256757a', '096e3846-196b-54bd-bf00-a0d90e00cd9c', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 250, 1, 3, true, 0),
+  ('eee95ef9-d6b3-5a76-a431-d6abefca7136', '9f06c800-96d2-5b13-944a-5fd8b2457fd7', '0371efb9-6d34-5d6a-b71d-71773256757a', '8bbc25a2-db78-5693-a1b2-69916a61a6ef', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 250, 0, 3, true, 1),
+  ('27259091-d6bc-5ec9-a55f-1b74ac315f85', '9f06c800-96d2-5b13-944a-5fd8b2457fd7', '0371efb9-6d34-5d6a-b71d-71773256757a', 'e9157874-3714-5bcc-9cc6-356f3e36d4aa', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 200, 0, 3, true, 2)
+on conflict (id) do nothing;
+insert into public.ingredient_groups (id, product_id, restaurant_id, name, selection, min_select, max_select, max_total_quantity, placement, sort_order)
+values ('72c25919-3d67-514f-a7f8-202c1243b7a2', '9f06c800-96d2-5b13-944a-5fd8b2457fd7', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Käse"}', 'multiple', 0, 1, 3, '{"type": "stack", "order": 2, "thickness": 0}', 2) on conflict (id) do nothing;
+insert into public.product_ingredients (id, product_id, group_id, ingredient_id, restaurant_id, unit_price_cents, default_quantity, max_quantity, removable, sort_order) values
+  ('0d5beffe-879d-5616-abd9-4c9d85820599', '9f06c800-96d2-5b13-944a-5fd8b2457fd7', '72c25919-3d67-514f-a7f8-202c1243b7a2', 'bad76396-b08e-59dd-ab32-4adff31ce40f', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 80, 1, 3, true, 0)
+on conflict (id) do nothing;
+insert into public.ingredient_groups (id, product_id, restaurant_id, name, selection, min_select, max_select, max_total_quantity, placement, sort_order)
+values ('f73846c0-2301-56e7-884d-2888faa8ba3e', '9f06c800-96d2-5b13-944a-5fd8b2457fd7', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Belag"}', 'multiple', 0, 6, 8, '{"type": "stack", "order": 3, "thickness": 0}', 3) on conflict (id) do nothing;
+insert into public.product_ingredients (id, product_id, group_id, ingredient_id, restaurant_id, unit_price_cents, default_quantity, max_quantity, removable, sort_order) values
+  ('b2cf1ddb-a1bd-52b3-aa7b-c153005a6d38', '9f06c800-96d2-5b13-944a-5fd8b2457fd7', 'f73846c0-2301-56e7-884d-2888faa8ba3e', 'c6ff1548-3ece-5539-bb7b-43e31fe1074b', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 120, 0, 2, true, 0),
+  ('5c4f7dd0-92da-53bd-a0df-d8186c99d40c', '9f06c800-96d2-5b13-944a-5fd8b2457fd7', 'f73846c0-2301-56e7-884d-2888faa8ba3e', 'ed0f7015-6006-5e96-93de-3cacd1d5a1f6', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 50, 1, 2, true, 1),
+  ('17221090-2900-547f-b92d-edfaac819af5', '9f06c800-96d2-5b13-944a-5fd8b2457fd7', 'f73846c0-2301-56e7-884d-2888faa8ba3e', 'eb2039f7-5394-5ce9-8ad4-5a816840d82e', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 50, 1, 2, true, 2),
+  ('ba66f401-9508-52fb-a268-af7e4e1ead94', '9f06c800-96d2-5b13-944a-5fd8b2457fd7', 'f73846c0-2301-56e7-884d-2888faa8ba3e', '5592210e-a2af-5849-86aa-b3d4e984b9d5', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 50, 0, 2, true, 3),
+  ('affd2cf4-1a3f-5b8a-a7ad-2c9abb9b6d26', '9f06c800-96d2-5b13-944a-5fd8b2457fd7', 'f73846c0-2301-56e7-884d-2888faa8ba3e', 'f51933ef-7fec-5569-a6cc-864d4fa8ffa0', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 50, 1, 2, true, 4),
+  ('a5b08163-bb62-5d81-b187-ce88437d653e', '9f06c800-96d2-5b13-944a-5fd8b2457fd7', 'f73846c0-2301-56e7-884d-2888faa8ba3e', '3698764b-8a9a-5cc4-a268-5d7dad450ac4', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 100, 0, 1, true, 5)
+on conflict (id) do nothing;
+insert into public.ingredient_groups (id, product_id, restaurant_id, name, selection, min_select, max_select, max_total_quantity, placement, sort_order)
+values ('61a8fe4c-9e32-50be-9dda-65dd45c2056d', '9f06c800-96d2-5b13-944a-5fd8b2457fd7', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Soßen"}', 'multiple', 0, 3, 3, '{"type": "stack", "order": 4, "thickness": 0}', 4) on conflict (id) do nothing;
+insert into public.product_ingredients (id, product_id, group_id, ingredient_id, restaurant_id, unit_price_cents, default_quantity, max_quantity, removable, sort_order) values
+  ('b55ed0d5-edbb-5266-b384-7906b427ab3f', '9f06c800-96d2-5b13-944a-5fd8b2457fd7', '61a8fe4c-9e32-50be-9dda-65dd45c2056d', '50cb1c81-4afe-5a3b-943f-1b494b720745', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 30, 1, 1, true, 0),
+  ('0b31ca00-154e-52b9-bdad-fc368d3a9003', '9f06c800-96d2-5b13-944a-5fd8b2457fd7', '61a8fe4c-9e32-50be-9dda-65dd45c2056d', '8f1149bd-2331-5bd0-82fc-b3d61b5fc84b', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 30, 0, 1, true, 1),
+  ('50fb9216-9fbe-5b54-a475-061d89655f16', '9f06c800-96d2-5b13-944a-5fd8b2457fd7', '61a8fe4c-9e32-50be-9dda-65dd45c2056d', '119b1169-cb8c-5cdc-9184-2e905044457b', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 30, 0, 1, true, 2)
+on conflict (id) do nothing;
+insert into public.products (id, restaurant_id, category_id, name, description, configurator_kind, is_configurable, vat_rate_bp, allergens, sort_order)
+values ('b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '19a5836c-c5e4-579f-9673-294c465c0dd6', '{"de": "Cheeseburger"}', '{"de": "Rindfleisch, Cheddar, Salat, Tomate, Gurken, Burger-Soße."}', 'burger', true, 700, '{}', 5) on conflict (id) do nothing;
+insert into public.product_variants (id, product_id, restaurant_id, name, price_cents, scale, sort_order) values
+  ('8a1fc369-ccc9-5c2b-a1d8-6385c2e01c2f', 'b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Normal"}', 690, 1, 1)
+on conflict (id) do nothing;
+insert into public.ingredient_groups (id, product_id, restaurant_id, name, selection, min_select, max_select, max_total_quantity, placement, sort_order)
+values ('45874171-90f3-5744-b9c2-a6d7f079ad1c', 'b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Brötchen"}', 'single', 1, 1, 1, '{"type": "stack", "order": 0, "thickness": 0}', 0) on conflict (id) do nothing;
+insert into public.product_ingredients (id, product_id, group_id, ingredient_id, restaurant_id, unit_price_cents, default_quantity, max_quantity, removable, sort_order) values
+  ('0fdf9934-79a8-534e-9483-e7349574569c', 'b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', '45874171-90f3-5744-b9c2-a6d7f079ad1c', 'c64ea5d0-47f1-5a19-9121-f4cc7745fc57', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 0, 1, 1, false, 0),
+  ('ea6c1d14-bfd5-55cd-bac4-62f301396e2e', 'b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', '45874171-90f3-5744-b9c2-a6d7f079ad1c', '859df985-8d37-5d6b-8da3-bbaf9df8f07e', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 50, 0, 1, true, 1)
+on conflict (id) do nothing;
+insert into public.ingredient_groups (id, product_id, restaurant_id, name, selection, min_select, max_select, max_total_quantity, placement, sort_order)
+values ('4c2e48a7-a670-5c07-ab64-0863981a053b', 'b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Fleisch / Patty"}', 'multiple', 1, 1, 3, '{"type": "stack", "order": 1, "thickness": 0}', 1) on conflict (id) do nothing;
+insert into public.product_ingredients (id, product_id, group_id, ingredient_id, restaurant_id, unit_price_cents, default_quantity, max_quantity, removable, sort_order) values
+  ('af8afece-5525-5841-9a02-f1a6ce78c355', 'b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', '4c2e48a7-a670-5c07-ab64-0863981a053b', '096e3846-196b-54bd-bf00-a0d90e00cd9c', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 250, 1, 3, true, 0),
+  ('c7c54571-45d7-5309-b456-3b7f32d78765', 'b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', '4c2e48a7-a670-5c07-ab64-0863981a053b', '8bbc25a2-db78-5693-a1b2-69916a61a6ef', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 250, 0, 3, true, 1),
+  ('217cab94-2f1b-5a25-92f2-fe24fb19bdcf', 'b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', '4c2e48a7-a670-5c07-ab64-0863981a053b', 'e9157874-3714-5bcc-9cc6-356f3e36d4aa', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 200, 0, 3, true, 2)
+on conflict (id) do nothing;
+insert into public.ingredient_groups (id, product_id, restaurant_id, name, selection, min_select, max_select, max_total_quantity, placement, sort_order)
+values ('d2c18ee1-4953-5ea1-8524-ea70af753a2f', 'b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Käse"}', 'multiple', 0, 1, 3, '{"type": "stack", "order": 2, "thickness": 0}', 2) on conflict (id) do nothing;
+insert into public.product_ingredients (id, product_id, group_id, ingredient_id, restaurant_id, unit_price_cents, default_quantity, max_quantity, removable, sort_order) values
+  ('4674965e-f94e-54a9-87b3-b94fca7c9f15', 'b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', 'd2c18ee1-4953-5ea1-8524-ea70af753a2f', 'bad76396-b08e-59dd-ab32-4adff31ce40f', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 80, 1, 3, true, 0)
+on conflict (id) do nothing;
+insert into public.ingredient_groups (id, product_id, restaurant_id, name, selection, min_select, max_select, max_total_quantity, placement, sort_order)
+values ('8ab26584-ffa8-54b7-808b-ec58fa25d4d9', 'b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Belag"}', 'multiple', 0, 6, 8, '{"type": "stack", "order": 3, "thickness": 0}', 3) on conflict (id) do nothing;
+insert into public.product_ingredients (id, product_id, group_id, ingredient_id, restaurant_id, unit_price_cents, default_quantity, max_quantity, removable, sort_order) values
+  ('f342f2d4-2008-5c31-b0ce-ffb1f75286fa', 'b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', '8ab26584-ffa8-54b7-808b-ec58fa25d4d9', 'c6ff1548-3ece-5539-bb7b-43e31fe1074b', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 120, 0, 2, true, 0),
+  ('67f3323e-b596-564c-9c42-91fa3afd3300', 'b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', '8ab26584-ffa8-54b7-808b-ec58fa25d4d9', 'ed0f7015-6006-5e96-93de-3cacd1d5a1f6', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 50, 1, 2, true, 1),
+  ('fd7dd440-f481-56a5-bf6d-503be45dc1fd', 'b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', '8ab26584-ffa8-54b7-808b-ec58fa25d4d9', 'eb2039f7-5394-5ce9-8ad4-5a816840d82e', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 50, 1, 2, true, 2),
+  ('3e71c1ca-b612-58c8-9551-6685231500af', 'b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', '8ab26584-ffa8-54b7-808b-ec58fa25d4d9', '5592210e-a2af-5849-86aa-b3d4e984b9d5', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 50, 0, 2, true, 3),
+  ('7e79c761-2697-5fd3-a780-8d847437185c', 'b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', '8ab26584-ffa8-54b7-808b-ec58fa25d4d9', 'f51933ef-7fec-5569-a6cc-864d4fa8ffa0', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 50, 1, 2, true, 4),
+  ('020b80be-09e6-5018-a9b1-b08332bab80c', 'b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', '8ab26584-ffa8-54b7-808b-ec58fa25d4d9', '3698764b-8a9a-5cc4-a268-5d7dad450ac4', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 100, 0, 1, true, 5)
+on conflict (id) do nothing;
+insert into public.ingredient_groups (id, product_id, restaurant_id, name, selection, min_select, max_select, max_total_quantity, placement, sort_order)
+values ('b9d95965-e472-5a1f-bce7-208b41eb8b0f', 'b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Soßen"}', 'multiple', 0, 3, 3, '{"type": "stack", "order": 4, "thickness": 0}', 4) on conflict (id) do nothing;
+insert into public.product_ingredients (id, product_id, group_id, ingredient_id, restaurant_id, unit_price_cents, default_quantity, max_quantity, removable, sort_order) values
+  ('0e59fd74-90f3-5ddc-943a-87fdffe3866e', 'b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', 'b9d95965-e472-5a1f-bce7-208b41eb8b0f', '50cb1c81-4afe-5a3b-943f-1b494b720745', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 30, 1, 1, true, 0),
+  ('57e8282c-6185-593c-abff-9bb2f7618ed5', 'b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', 'b9d95965-e472-5a1f-bce7-208b41eb8b0f', '8f1149bd-2331-5bd0-82fc-b3d61b5fc84b', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 30, 0, 1, true, 1),
+  ('c702ba39-cc33-5ba4-884f-e967596fc992', 'b00d88c8-301e-54c1-96d6-d8e2f9cc72a6', 'b9d95965-e472-5a1f-bce7-208b41eb8b0f', '119b1169-cb8c-5cdc-9184-2e905044457b', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 30, 0, 1, true, 2)
+on conflict (id) do nothing;
+insert into public.products (id, restaurant_id, category_id, name, description, configurator_kind, is_configurable, vat_rate_bp, allergens, sort_order)
+values ('50d87c5d-508f-5540-b7c8-0c6d2be9553c', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '19a5836c-c5e4-579f-9673-294c465c0dd6', '{"de": "Bacon Burger"}', '{"de": "Wie der Cheeseburger, plus Bacon und rote Zwiebeln."}', 'burger', true, 700, '{}', 6) on conflict (id) do nothing;
+insert into public.product_variants (id, product_id, restaurant_id, name, price_cents, scale, sort_order) values
+  ('4b7fd4e4-37ee-58fb-a422-6bea056fb1a6', '50d87c5d-508f-5540-b7c8-0c6d2be9553c', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Normal"}', 890, 1, 1)
+on conflict (id) do nothing;
+insert into public.ingredient_groups (id, product_id, restaurant_id, name, selection, min_select, max_select, max_total_quantity, placement, sort_order)
+values ('abd369e4-fc8e-5191-b398-c56a1fcdead0', '50d87c5d-508f-5540-b7c8-0c6d2be9553c', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Brötchen"}', 'single', 1, 1, 1, '{"type": "stack", "order": 0, "thickness": 0}', 0) on conflict (id) do nothing;
+insert into public.product_ingredients (id, product_id, group_id, ingredient_id, restaurant_id, unit_price_cents, default_quantity, max_quantity, removable, sort_order) values
+  ('0ae71424-1e00-5def-816f-d945a9410f4d', '50d87c5d-508f-5540-b7c8-0c6d2be9553c', 'abd369e4-fc8e-5191-b398-c56a1fcdead0', 'c64ea5d0-47f1-5a19-9121-f4cc7745fc57', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 0, 1, 1, false, 0),
+  ('9a313c62-741d-5a74-aa19-49081b0db679', '50d87c5d-508f-5540-b7c8-0c6d2be9553c', 'abd369e4-fc8e-5191-b398-c56a1fcdead0', '859df985-8d37-5d6b-8da3-bbaf9df8f07e', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 50, 0, 1, true, 1)
+on conflict (id) do nothing;
+insert into public.ingredient_groups (id, product_id, restaurant_id, name, selection, min_select, max_select, max_total_quantity, placement, sort_order)
+values ('874286bd-791a-5575-a8bb-94c3d37a824d', '50d87c5d-508f-5540-b7c8-0c6d2be9553c', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Fleisch / Patty"}', 'multiple', 1, 1, 3, '{"type": "stack", "order": 1, "thickness": 0}', 1) on conflict (id) do nothing;
+insert into public.product_ingredients (id, product_id, group_id, ingredient_id, restaurant_id, unit_price_cents, default_quantity, max_quantity, removable, sort_order) values
+  ('5132557c-91d1-5a19-a7f9-04811d44af1f', '50d87c5d-508f-5540-b7c8-0c6d2be9553c', '874286bd-791a-5575-a8bb-94c3d37a824d', '096e3846-196b-54bd-bf00-a0d90e00cd9c', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 250, 1, 3, true, 0),
+  ('d4fa3456-be73-5516-86f1-ef939cf4e7ee', '50d87c5d-508f-5540-b7c8-0c6d2be9553c', '874286bd-791a-5575-a8bb-94c3d37a824d', '8bbc25a2-db78-5693-a1b2-69916a61a6ef', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 250, 0, 3, true, 1),
+  ('36b7fc26-ed19-54bb-9062-06c3ca58e141', '50d87c5d-508f-5540-b7c8-0c6d2be9553c', '874286bd-791a-5575-a8bb-94c3d37a824d', 'e9157874-3714-5bcc-9cc6-356f3e36d4aa', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 200, 0, 3, true, 2)
+on conflict (id) do nothing;
+insert into public.ingredient_groups (id, product_id, restaurant_id, name, selection, min_select, max_select, max_total_quantity, placement, sort_order)
+values ('a9c18a36-cf8e-5ebb-a30b-418c324a06f1', '50d87c5d-508f-5540-b7c8-0c6d2be9553c', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Käse"}', 'multiple', 0, 1, 3, '{"type": "stack", "order": 2, "thickness": 0}', 2) on conflict (id) do nothing;
+insert into public.product_ingredients (id, product_id, group_id, ingredient_id, restaurant_id, unit_price_cents, default_quantity, max_quantity, removable, sort_order) values
+  ('6d9aeeb0-ee20-5187-9971-4f7dbf5b9ae2', '50d87c5d-508f-5540-b7c8-0c6d2be9553c', 'a9c18a36-cf8e-5ebb-a30b-418c324a06f1', 'bad76396-b08e-59dd-ab32-4adff31ce40f', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 80, 1, 3, true, 0)
+on conflict (id) do nothing;
+insert into public.ingredient_groups (id, product_id, restaurant_id, name, selection, min_select, max_select, max_total_quantity, placement, sort_order)
+values ('e4861e40-68de-54c6-841f-335f8705458f', '50d87c5d-508f-5540-b7c8-0c6d2be9553c', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Belag"}', 'multiple', 0, 6, 8, '{"type": "stack", "order": 3, "thickness": 0}', 3) on conflict (id) do nothing;
+insert into public.product_ingredients (id, product_id, group_id, ingredient_id, restaurant_id, unit_price_cents, default_quantity, max_quantity, removable, sort_order) values
+  ('ce9bed85-a077-568b-a8e3-30686c01e198', '50d87c5d-508f-5540-b7c8-0c6d2be9553c', 'e4861e40-68de-54c6-841f-335f8705458f', 'c6ff1548-3ece-5539-bb7b-43e31fe1074b', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 120, 1, 2, true, 0),
+  ('5b3b65bf-de02-56dd-992f-d0da1a8dd5aa', '50d87c5d-508f-5540-b7c8-0c6d2be9553c', 'e4861e40-68de-54c6-841f-335f8705458f', 'ed0f7015-6006-5e96-93de-3cacd1d5a1f6', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 50, 1, 2, true, 1),
+  ('4ccb4667-7e25-515e-a8b9-cabc5dbe1bbe', '50d87c5d-508f-5540-b7c8-0c6d2be9553c', 'e4861e40-68de-54c6-841f-335f8705458f', 'eb2039f7-5394-5ce9-8ad4-5a816840d82e', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 50, 1, 2, true, 2),
+  ('85916099-4789-5565-acad-cfc09087891a', '50d87c5d-508f-5540-b7c8-0c6d2be9553c', 'e4861e40-68de-54c6-841f-335f8705458f', '5592210e-a2af-5849-86aa-b3d4e984b9d5', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 50, 1, 2, true, 3),
+  ('a0a80038-eaf8-5a04-a35d-08f7465d5fc7', '50d87c5d-508f-5540-b7c8-0c6d2be9553c', 'e4861e40-68de-54c6-841f-335f8705458f', 'f51933ef-7fec-5569-a6cc-864d4fa8ffa0', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 50, 1, 2, true, 4),
+  ('c91e8814-f03d-54ca-9c5a-29f23ee01480', '50d87c5d-508f-5540-b7c8-0c6d2be9553c', 'e4861e40-68de-54c6-841f-335f8705458f', '3698764b-8a9a-5cc4-a268-5d7dad450ac4', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 100, 0, 1, true, 5)
+on conflict (id) do nothing;
+insert into public.ingredient_groups (id, product_id, restaurant_id, name, selection, min_select, max_select, max_total_quantity, placement, sort_order)
+values ('37d13895-7229-582e-b19f-859345fdb86e', '50d87c5d-508f-5540-b7c8-0c6d2be9553c', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', '{"de": "Soßen"}', 'multiple', 0, 3, 3, '{"type": "stack", "order": 4, "thickness": 0}', 4) on conflict (id) do nothing;
+insert into public.product_ingredients (id, product_id, group_id, ingredient_id, restaurant_id, unit_price_cents, default_quantity, max_quantity, removable, sort_order) values
+  ('6b017202-048c-5e81-a844-7f14b7873f2c', '50d87c5d-508f-5540-b7c8-0c6d2be9553c', '37d13895-7229-582e-b19f-859345fdb86e', '50cb1c81-4afe-5a3b-943f-1b494b720745', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 30, 1, 1, true, 0),
+  ('1da67bc8-081e-57d0-b816-a789a513b29d', '50d87c5d-508f-5540-b7c8-0c6d2be9553c', '37d13895-7229-582e-b19f-859345fdb86e', '8f1149bd-2331-5bd0-82fc-b3d61b5fc84b', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 30, 0, 1, true, 1),
+  ('79b4a2ba-2231-5892-b758-423b101ec1d3', '50d87c5d-508f-5540-b7c8-0c6d2be9553c', '37d13895-7229-582e-b19f-859345fdb86e', '119b1169-cb8c-5cdc-9184-2e905044457b', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 30, 0, 1, true, 2)
 on conflict (id) do nothing;
 insert into public.products (id, restaurant_id, category_id, name, description, is_configurable, vat_rate_bp, sort_order)
 values ('f05d0e9a-610e-51d3-8bdf-a1d57ae1ffe3', 'b1122e7c-f209-5dfe-8e5a-81f05c461fff', 'b6436508-a326-54a6-b5d1-229f05e0450b', '{"de": "Mineralwasser 0,5 l"}', '{"de": "Testartikel"}', false, 1900, 10) on conflict (id) do nothing;

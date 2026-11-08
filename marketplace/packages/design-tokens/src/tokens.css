@@ -1,23 +1,24 @@
 /* Generated from src/index.ts – keep in sync (test enforces it). */
 :root {
-  --c-bg: #FFFCF8;
+  --c-bg: #FFF7F0;
   --c-surface: #FFFFFF;
-  --c-surface-muted: #FFF6EC;
-  --c-border: #EDE3D6;
+  --c-surface-muted: #FFF1E6;
+  --c-border: #F1E4D8;
   --c-text: #1B1B18;
   --c-text-muted: #55524B;
-  --c-primary: #1F6F50;
-  --c-primary-hover: #0E3B2A;
+  --c-primary: #C2410C;
+  --c-primary-hover: #9A3412;
   --c-on-primary: #FFFFFF;
-  --c-primary-soft: #E3F2EA;
-  --c-accent: #C7361D;
-  --c-accent-soft: #FDE7E2;
-  --c-focus: #2E9A6E;
+  --c-primary-soft: #FFEDD5;
+  --c-accent: #1F6F50;
+  --c-accent-soft: #E3F2EA;
+  --c-focus: #F97316;
+  --c-success: #1F7A3D;
   --c-danger: #B42318;
   --c-sponsored: #9A6300;
   --radius-sm: 8px;
   --radius-md: 12px;
-  --radius-lg: 20px;
+  --radius-lg: 24px;
   --radius-pill: 999px;
   --shadow-card: 0 1px 2px rgba(27,27,24,.06), 0 4px 16px rgba(27,27,24,.06);
   --shadow-raised: 0 8px 32px rgba(27,27,24,.12);

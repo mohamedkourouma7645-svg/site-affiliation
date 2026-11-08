@@ -7,7 +7,11 @@ export default defineConfig({
   timeout: 30_000,
   use: {
     baseURL: `http://localhost:${PORT}`,
-    launchOptions: process.env.PW_CHROMIUM_PATH ? { executablePath: process.env.PW_CHROMIUM_PATH } : {},
+    launchOptions: {
+      ...(process.env.PW_CHROMIUM_PATH ? { executablePath: process.env.PW_CHROMIUM_PATH } : {}),
+      // Software WebGL so the 3D configurator also renders on CI machines without a GPU.
+      args: ["--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader"],
+    },
   },
   projects: [
     { name: "mobile", use: { ...devices["Pixel 7"] } },
