@@ -5,16 +5,21 @@ const unitPrice = (page: Page) => page.getByTestId("unit-price");
 const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const plus = (page: Page, name: string) => page.getByRole("button", { name: new RegExp(`^${esc(name)}\\s.*hinzufügen$`) });
 
-async function openOwnPizza(page: Page) {
+/**
+ * Price/rule tests use the light 2D view (?ansicht=2d) so CPU-only CI machines are not
+ * slowed down by software WebGL; dedicated tests below cover the 3D view.
+ */
+async function openOwnPizza(page: Page, view: "2d" | "3d" = "2d") {
   await page.goto("/restaurants?kategorie=pizza");
   await page.getByRole("link", { name: "Test-Pizzeria (Demo)" }).click();
   await expect(page.getByText("Testmodus:")).toBeVisible();
-  await page.getByRole("link", { name: /Eigene Pizza/ }).click();
+  const href = await page.getByRole("link", { name: /Eigene Pizza/ }).getAttribute("href");
+  await page.goto(view === "2d" ? `${href}?ansicht=2d` : href!);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Stell deine Pizza zusammen");
 }
 
 test("configure a pizza with live prices and size-dependent extras", async ({ page }) => {
-  await openOwnPizza(page);
+  await openOwnPizza(page, "3d");
   await expect(unitPrice(page)).toHaveText("9,00 €");
   await plus(page, "Salami").click();
   await expect(unitPrice(page)).toHaveText("11,00 €");
