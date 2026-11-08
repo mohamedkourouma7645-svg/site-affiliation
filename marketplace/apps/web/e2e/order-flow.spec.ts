@@ -5,7 +5,7 @@ import { expect, test, type Page } from "@playwright/test";
 // software rendering (SwiftShader on CI) closing a context with a live canvas can stall
 // the next test's context setup.
 test.afterEach(async ({ page }) => {
-  await page.goto("about:blank").catch(() => {});
+  await page.goto("about:blank", { timeout: 10_000 }).catch(() => {});
 });
 
 const unitPrice = (page: Page) => page.getByTestId("unit-price");
