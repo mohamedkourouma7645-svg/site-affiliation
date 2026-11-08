@@ -1,6 +1,7 @@
 import "server-only";
 import { ROOT_CATEGORIES, type Locale } from "@app/core";
 import { z } from "zod";
+import { getCatalogRepo } from "./catalog-repo";
 import { getSupabase } from "./supabase/server";
 
 export interface CategoryView {
@@ -53,32 +54,17 @@ export interface RestaurantCard {
 
 /**
  * Lists verified, active restaurants. Distance filtering needs geocoding
- * (Phase 2); until then the result is not filtered by address.
+ * (next step); until then the result is not filtered by address.
  */
 export async function searchRestaurants(search: RestaurantSearch): Promise<{ configured: boolean; restaurants: RestaurantCard[] }> {
-  const supabase = await getSupabase();
-  if (!supabase) return { configured: false, restaurants: [] };
-  let query = supabase
-    .from("restaurants")
-    .select("slug, name, city, prep_time_minutes, rating_avg, rating_count, offers_delivery, offers_pickup")
-    .eq("status", "active")
-    .limit(50);
-  if (search.modus === "lieferung") query = query.eq("offers_delivery", true);
-  if (search.modus === "abholung") query = query.eq("offers_pickup", true);
-  if (search.kategorie) query = query.contains("cuisines", [search.kategorie]);
-  const { data, error } = await query;
-  if (error) throw new Error(`Restaurant search failed: ${error.message}`);
+  const repo = await getCatalogRepo();
+  if (!repo) return { configured: false, restaurants: [] };
+  const rows = await repo.listActiveRestaurants({ delivery: search.modus === "lieferung", pickup: search.modus === "abholung", cuisine: search.kategorie });
   return {
     configured: true,
-    restaurants: (data ?? []).map((r) => ({
-      slug: r.slug as string,
-      name: r.name as string,
-      city: r.city as string,
-      prepTimeMinutes: r.prep_time_minutes as number,
-      ratingAvg: Number(r.rating_avg),
-      ratingCount: r.rating_count as number,
-      offersDelivery: r.offers_delivery as boolean,
-      offersPickup: r.offers_pickup as boolean,
+    restaurants: rows.map((r) => ({
+      slug: r.slug, name: r.name, city: r.city, prepTimeMinutes: r.prep_time_minutes,
+      ratingAvg: Number(r.rating_avg), ratingCount: r.rating_count, offersDelivery: r.offers_delivery, offersPickup: r.offers_pickup,
     })),
   };
 }

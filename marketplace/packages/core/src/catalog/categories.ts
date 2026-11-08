@@ -45,3 +45,10 @@ export const EU_ALLERGENS = [
   "nuts", "celery", "mustard", "sesame", "sulphites", "lupin", "molluscs",
 ] as const;
 export type Allergen = (typeof EU_ALLERGENS)[number];
+
+/** German display labels for the 14 EU allergens. */
+export const ALLERGEN_LABELS_DE: Record<Allergen, string> = {
+  gluten: "Glutenhaltiges Getreide", crustaceans: "Krebstiere", eggs: "Eier", fish: "Fisch", peanuts: "Erdnüsse",
+  soy: "Soja", milk: "Milch/Laktose", nuts: "Schalenfrüchte", celery: "Sellerie", mustard: "Senf", sesame: "Sesam",
+  sulphites: "Schwefeldioxid/Sulfite", lupin: "Lupinen", molluscs: "Weichtiere",
+};

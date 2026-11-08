@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { t, type Locale } from "@app/core";
 import { BRAND_NAME } from "@/lib/brand";
+import { CartLink } from "./CartLink";
 
 export function Header() {
   return (
@@ -10,6 +11,7 @@ export function Header() {
           <span className="logo-mark" aria-hidden="true">T</span>
           {BRAND_NAME}<span className="sr-only"> – Startseite</span>
         </Link>
+        <CartLink />
       </div>
     </header>
   );
