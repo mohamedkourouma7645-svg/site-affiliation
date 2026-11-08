@@ -32,11 +32,11 @@ function points(key: string, n: number, radius: number) {
   });
 }
 
-function Piece({ k, x, y, rot, s }: { k: string; x: number; y: number; rot: number; s: number }) {
+export function Piece({ k, x, y, rot, s }: { k: string; x: number; y: number; rot: number; s: number }) {
   const t = `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${rot.toFixed(0)}) scale(${s.toFixed(2)})`;
   switch (k) {
     case "salami":
-      return <g transform={t}><circle r="11" fill="url(#salami)" /><circle cx="-3" cy="-2" r="1.6" fill="#f4d3c4" /><circle cx="4" cy="3" r="1.3" fill="#f4d3c4" /><circle cx="2" cy="-5" r="1.1" fill="#f4d3c4" /></g>;
+      return <g transform={t}><circle r="11" fill="#b42c1d" /><circle cx="-3" cy="-2" r="1.6" fill="#f4d3c4" /><circle cx="4" cy="3" r="1.3" fill="#f4d3c4" /><circle cx="2" cy="-5" r="1.1" fill="#f4d3c4" /></g>;
     case "pepperoni-wurst":
       return <g transform={t}><circle r="7.5" fill="#a5281a" /><circle r="7.5" fill="none" stroke="#7a1b10" strokeWidth="1.2" /><circle cx="-2" cy="1" r="1" fill="#e9b2a1" /></g>;
     case "schinken":

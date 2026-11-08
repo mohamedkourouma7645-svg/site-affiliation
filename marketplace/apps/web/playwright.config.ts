@@ -4,7 +4,7 @@ import { defineConfig, devices } from "@playwright/test";
 const PORT = 3100;
 export default defineConfig({
   testDir: "e2e",
-  timeout: 30_000,
+  timeout: 60_000, // software WebGL (SwiftShader) makes 3D pages slow on CPU-only machines
   use: {
     baseURL: `http://localhost:${PORT}`,
     launchOptions: {

@@ -2,14 +2,15 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 
 const unitPrice = (page: Page) => page.getByTestId("unit-price");
-const plus = (page: Page, name: string) => page.getByRole("button", { name: `${name} mehr` });
+const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const plus = (page: Page, name: string) => page.getByRole("button", { name: new RegExp(`^${esc(name)}\\s.*hinzufügen$`) });
 
 async function openOwnPizza(page: Page) {
   await page.goto("/restaurants?kategorie=pizza");
   await page.getByRole("link", { name: "Test-Pizzeria (Demo)" }).click();
   await expect(page.getByText("Testmodus:")).toBeVisible();
   await page.getByRole("link", { name: /Eigene Pizza/ }).click();
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Eigene Pizza");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Stell deine Pizza zusammen");
 }
 
 test("configure a pizza with live prices and size-dependent extras", async ({ page }) => {
@@ -72,7 +73,8 @@ test("cart: add, server check, delivery vs pickup", async ({ page }) => {
   await openOwnPizza(page);
   await plus(page, "Salami").click();
   await page.getByRole("button", { name: "Anzahl erhöhen" }).click();
-  await page.getByRole("button", { name: /In den Warenkorb · 22,00 €/ }).click();
+  await expect(page.getByRole("button", { name: /In den Warenkorb/ })).toContainText("22,00 €");
+  await page.getByRole("button", { name: /In den Warenkorb/ }).click();
   await expect(page.getByRole("link", { name: "Warenkorb, 2 Artikel" })).toBeVisible();
 
   await page.getByRole("link", { name: "Warenkorb, 2 Artikel" }).click();
